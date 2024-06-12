@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity()
 export class UserModel{
@@ -20,4 +20,9 @@ export class UserModel{
     //데이터가 업데이트 될 때마다 1씩 올라간다.
     @VersionColumn()
     version: number;
+
+    // pk가 아니더라도, 아래와 같이 결합하여 uuid나 1씩 증가를 넣을 수 있습니다.
+    @Column()
+    @Generated()
+    additionalId: number;
 }
