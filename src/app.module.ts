@@ -13,12 +13,12 @@ import { UserModel } from './entity/user.entity';
       // 데이터베이스 타입
       type: 'postgres',
       host: 'localhost',
-      port: 5432,
+      port: 5433,
       username: 'postgres',
       password: '1234',
       database: 'typeormstudy',
       entities: [
-        
+        UserModel,
       ],
       synchronize: true,
     })
