@@ -4,6 +4,7 @@ enum Role{
     USER = 'user',
     ADMIN = 'admin'
 }
+
 @Entity()
 export class UserModel{
     // @PrimaryColumn과 차이점 숙지할 것
