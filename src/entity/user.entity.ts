@@ -1,5 +1,9 @@
 import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
+enum Role{
+    USER = 'user',
+    ADMIN = 'admin'
+}
 @Entity()
 export class UserModel{
     // @PrimaryColumn과 차이점 숙지할 것
@@ -34,6 +38,13 @@ export class UserModel{
         unique: false,
     })
     title: string;
+    
+    @Column({
+        type: 'enum',
+        enum: Role,
+        default: Role.USER,
+    })
+    role: Role;
 
     // 이건 데이터 생성되는 날짜와 시간 자동으로 찍힘 == timestamp
     @CreateDateColumn()
