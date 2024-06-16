@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModel } from './entity/user.entity';
 import { StudentModel, TeacherModel } from './entity/person.entity';
 import { AirplaneModel, BookModel, CarModel, ComputerModel, SingleBaseModel } from './entity/inheritance.entity';
+import { ProfileModel } from './entity/profile.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       UserModel,
+      ProfileModel
     ]),
     TypeOrmModule.forRoot({
       // 데이터베이스 타입
@@ -27,7 +29,9 @@ import { AirplaneModel, BookModel, CarModel, ComputerModel, SingleBaseModel } fr
         CarModel,
         SingleBaseModel,
         ComputerModel,
-        AirplaneModel
+        AirplaneModel,
+        ProfileModel,
+        UserModel
       ],
       synchronize: true,
     })
