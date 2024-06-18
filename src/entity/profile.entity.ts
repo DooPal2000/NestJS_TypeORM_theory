@@ -10,6 +10,6 @@ export class ProfileModel{
     @JoinColumn()
     user: UserModel;
 
-    @Column()
+    @Column({ nullable: true })
     profileImg: string;
 }
