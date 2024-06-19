@@ -69,15 +69,17 @@ export class AppController {
   async createUserAndPosts() {
     const user = await this.userRepository.save({
       email: 'postuser@naver.com',
+      profile: {
+        profileImg: 'asdf.jpg',
+      }
     });
 
-    const profile = await this.profileRepository.save({
-      profileImg: 'asdf.jpg',
-      user,
-    });
+    // const profile = await this.profileRepository.save({
+    //   profileImg: 'asdf.jpg',
+    //   user,
+    // });
 
     console.log(user);
-    console.log(profile);
 
     await this.postRepository.save({
       author: user,
@@ -108,27 +110,27 @@ export class AppController {
     const tag2 = await this.tagRepository.save({
       name: 'TypeScript',
       posts: [post2]
-    });    
+    });
     const post3 = await this.postRepository.save({
       title: 'NextJs 3',
-      tags:[tag1, tag2]
+      tags: [tag1, tag2]
     });
     return true
   }
 
   @Get('posts')
-  getPosts(){
+  getPosts() {
     return this.postRepository.find({
-      relations:{
+      relations: {
         tags: true,
       }
     })
   }
 
   @Get('tags')
-  getTags(){
+  getTags() {
     return this.tagRepository.find({
-      relations:{
+      relations: {
         posts: true,
       }
     })
@@ -149,5 +151,12 @@ export class AppController {
     }
     await this.userRepository.delete(userId);
     return userId;
+  }
+
+
+  @Delete('user/profile')
+  async deleteProfile(@Param('id') id: string) {
+    await this.profileRepository.delete(+id);
+    return id;
   }
 }
