@@ -2,7 +2,7 @@ import { Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '
 import { AppService } from './app.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './entity/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, LessThan, Like, MoreThan, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { ProfileModel } from './entity/profile.entity';
 import { PostModel } from './entity/post.entity';
 import { TagModel } from './entity/tag.entity';
@@ -22,18 +22,63 @@ export class AppController {
   ) { }
 
   @Post('users')
-  postUser() {
-    return this.userRepository.save({
-      //title: 'test title'
-    });
+  async postUser() {
+    for (let i = 0; i < 100; i++) {
+      await this.userRepository.save({
+        email: `user-${i}@google.com`
+      });
+    }
   }
   @Get('users')
   getUsers() {
     return this.userRepository.find({
-      relations: {
-        profile: true,
-        posts: true
-      }
+      where: {
+        // // 아닌 경우 가져오기
+        // id: Not(101),
+        // // 적은 경우 가져오기
+        // id: LessThan(110),
+        // id:MoreThan(120),
+        // id:MoreThanOrEqual(120),
+
+        // //유사값
+        // email: Like('%google%'),
+        // 대소문자 구분없는 유사값
+        email: ILike('%google%'),
+
+        // 이외에도 Between, In, IsNull 등이 있다
+        
+        
+      },
+
+
+
+      // 어떤 프로퍼티를 선택할지
+      // 기본값:  모든 프로퍼티를 가져온다
+      select: {
+        id: true,
+        createdAt: true,
+        email: true,
+        profile: {
+          id: true
+        },
+      },
+
+      //필터링할 조건을 입력하게 된다. (조건은 and 조건으로 묶인다)
+      // 리스트로 제공할 경우, or 조건으로 묶이게 된다.
+
+      // // 관계를 가져오는 법
+      // relations: {
+      //   profile: true,
+      // },
+
+      // // 오름차순, 내림차순 정렬
+      // order: {
+      //   id: 'ASC'
+      // },
+
+      // // 처음 몇개를 제외할지, 몇개를 가져올지
+      // skip: 0,
+      // take: 3
     });
   }
 
@@ -151,6 +196,17 @@ export class AppController {
     }
     await this.userRepository.delete(userId);
     return userId;
+  }
+
+  @Delete('user')
+  async deleteAllUser(@Param('id') userId: number) {
+    const users = await this.userRepository.find({});
+    if (!users) {
+      throw new NotFoundException();
+    }
+    for (const user of users) {
+      await this.userRepository.delete(user.id);
+    }
   }
 
 

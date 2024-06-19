@@ -42,7 +42,7 @@ export class UserModel {
 
     @OneToOne(() => ProfileModel, (profile) => profile.user, {
         // find() 실행 할때마다 항상 같이 가져올 relation
-        eager: true,
+        eager: false,
         // 저장할때 relation 을 한번에 같이 저장가능
         cascade: true,
         // null 허용여부
@@ -52,6 +52,7 @@ export class UserModel {
         // cascade -> 참조하는 row 도 같이삭제
         // set null -> 참조하는 row 에서 참조 id 를 null로 변경
         // set default -> 기본 세팅으로 설정
+        // restrict -> 참조하는 row 가 있는 경우 삭제불가
         onDelete: 'CASCADE',
 
     })
