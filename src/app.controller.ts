@@ -42,12 +42,12 @@ export class AppController {
 
         // //유사값
         // email: Like('%google%'),
-        // 대소문자 구분없는 유사값
-        email: ILike('%google%'),
+        // // 대소문자 구분없는 유사값
+        // email: ILike('%google%'),
 
         // 이외에도 Between, In, IsNull 등이 있다
-        
-        
+
+
       },
 
 
@@ -55,12 +55,12 @@ export class AppController {
       // 어떤 프로퍼티를 선택할지
       // 기본값:  모든 프로퍼티를 가져온다
       select: {
-        id: true,
-        createdAt: true,
-        email: true,
-        profile: {
-          id: true
-        },
+        // id: true,
+        // createdAt: true,
+        // email: true,
+        // profile: {
+        //   id: true
+        // },
       },
 
       //필터링할 조건을 입력하게 된다. (조건은 and 조건으로 묶인다)
@@ -71,10 +71,10 @@ export class AppController {
       //   profile: true,
       // },
 
-      // // 오름차순, 내림차순 정렬
-      // order: {
-      //   id: 'ASC'
-      // },
+      // 오름차순, 내림차순 정렬
+      order: {
+        id: 'ASC'
+      },
 
       // // 처음 몇개를 제외할지, 몇개를 가져올지
       // skip: 0,
@@ -214,5 +214,65 @@ export class AppController {
   async deleteProfile(@Param('id') id: string) {
     await this.profileRepository.delete(+id);
     return id;
+  }
+
+  @Post('sample')
+  async sample() {
+    // //모델에 해당하는 객체 생성 -저장 x 
+    // const user1 = this.userRepository.create({
+    //   email: 'test@codefactory.ai',
+    // });
+
+    // // 저장
+    // const user2 = this.userRepository.save({
+    //   email: 'test@codefactory.ai',
+    // });
+
+    // // preload
+    // // 입력된 값 기반으로 DB에 있는 데이터 불러오고,
+    // // 추가 입력된 값으로 데이터베이스에서 가져온 값들을 대체 (저장 x)
+    // const user3 = await this.userRepository.preload({
+    //   id: 101,
+    //   email: 'codefactory@codefactory.ai',      
+    // })
+
+    // // 삭제하기
+    // await this.userRepository.delete(
+    //   101,
+    // )
+
+    // await this.userRepository.increment({
+    //   id: 101,
+    // }, 'count', 5)
+
+    // await this.userRepository.decrement({
+    //   id: 101,
+    // }, 'count', 1)
+
+    // 갯수 카운팅하기
+    const count = await this.userRepository.count({
+      where: {
+        email: ILike('%0%'),
+      },
+    });
+
+    const sum = await this.userRepository.sum('count',{
+      email: ILike('%0%'),
+    });
+
+    // average
+    const average = await this.userRepository.average('count', {
+      id: LessThan(104),
+    });
+
+    //최소값 :min, max
+
+    // 만약 이 필터를 넣지 않았다면, 총 갯수가 몇개인지도 반환을 같이 해 준다.
+    const userAndCount = await this.userRepository.findAndCount({
+      take: 3
+    });
+  
+
+    return userAndCount;
   }
 }
